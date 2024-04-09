@@ -38,6 +38,9 @@ public class MyForegroundService extends Service implements onRequestPermissions
     private int coachD2;
     private int coachD10;
 
+    private int CD2 =-1;
+    private int CD10 =-1;
+
 
     Handler mHandler = new Handler(Looper.getMainLooper()); // Associates with the main (UI) thread's Looper
     private final Runnable mRunnable = new Runnable() {
@@ -134,36 +137,44 @@ public class MyForegroundService extends Service implements onRequestPermissions
                 .setContentIntent(pendingIntent)
                 .build();
     }
-    public interface DataCallback {
-        void onDataReceived(int CD2,int CD10);
-    }
 
-    private void fetchDataFromAPI(final DataCallback callback) {
-        String uri = "https://api.thingspeak.com/channels/2501806/feeds.json?api_key=5SXGZMNZV8MK40BI&results=1";
+    private void fetchCoachD2Data() {
+        String uri = "https://api.thingspeak.com/channels/2457707/fields/1.json?api_key=GI6IWZHS4JO8XBXE&results=1";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, uri, response -> {
             try {
                 JSONObject jsonObject = new JSONObject(response);
                 JSONArray jsonArray = jsonObject.getJSONArray("feeds");
                 JSONObject jsonObjectFeeds = jsonArray.getJSONObject(0);
                 String field1 = jsonObjectFeeds.getString("field1");
-                String field2 = jsonObjectFeeds.getString("field2");
-                int CD2 = 0;
-                int CD10 = 0;
+                Log.d(TAG, "fetchCoachD2Data: "+field1);
                 if(!field1.equals("null")){
                     CD2 = Integer.parseInt(field1);
                 }
-                if(!field2.equals("null")){
-                    CD10 = Integer.parseInt(field2);
-                }
-                callback.onDataReceived(CD2,CD10);
+                fetchCoachD10Data();
             } catch (JSONException e) {
                 e.printStackTrace();
-                callback.onDataReceived(-1,-1);
             }
-        }, error -> {
-            // Handle error response
-            callback.onDataReceived(-1,-1); // Notify callback about error condition
-        });
+        }, error -> CD2=-1);
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(stringRequest);
+    }
+
+    private void fetchCoachD10Data() {
+        String uri = "https://api.thingspeak.com/channels/2458030/fields/1.json?api_key=48UN6MGBTN4Y69RC&results=1";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, uri, response -> {
+            try {
+                JSONObject jsonObject = new JSONObject(response);
+                JSONArray jsonArray = jsonObject.getJSONArray("feeds");
+                JSONObject jsonObjectFeeds = jsonArray.getJSONObject(0);
+                String field1 = jsonObjectFeeds.getString("field1");
+                Log.d(TAG, "fetchCoachD10Data: "+field1);
+                if(!field1.equals("null")){
+                    CD10 = Integer.parseInt(field1);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }, error -> CD10=-1);
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(stringRequest);
     }
@@ -172,10 +183,9 @@ public class MyForegroundService extends Service implements onRequestPermissions
     @SuppressLint("NotificationPermission")
     private void fetchDataAndCheckThreshold() {
         Log.d(TAG, "Fetching data from API and checking threshold...");
-        fetchDataFromAPI((CD2,CD10) -> {
-            if (CD2 != -1) {
+        fetchCoachD2Data();
+            if (CD2 != -1 && CD10 != -1) {
                 // Data fetched successfully, use it here
-                Log.d(TAG, "fetched value : "+CD2);
                 coachD2 = CD2;
                 coachD10 = CD10;
                 Log.d(TAG, "onDataReceived: coachD2 "+coachD2);
@@ -185,7 +195,7 @@ public class MyForegroundService extends Service implements onRequestPermissions
 
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 if (notificationManager == null) {
-                    return; // Unable to show notification
+                    return;
                 }
 
                 // Create a notification channel for Android Oreo and above
@@ -201,13 +211,8 @@ public class MyForegroundService extends Service implements onRequestPermissions
 
                 // Show the notification
                 notificationManager.notify(NOTIFICATION_ID, builder.build());
-                // Do whatever you want with the fetched data
             } else {
-                // Handle error condition
                 Log.e(TAG, "Error fetching data from API");
-                // Display an error message or handle the error condition appropriately
             }
-        });
     }
 }
-

@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
             coachD2Measure = intent.getIntExtra("coachD2", 0);
             coachD10Measure = intent.getIntExtra("coachD10", 0);
             Log.d("Main-activity", "onReceive: coachD2Measure : "+coachD2Measure);
+            Log.d("Main-activity", "onReceive: coachD10Measure : "+coachD10Measure);
             String coachD2MeasureStr = String.valueOf(coachD2Measure);
             String coachD10MeasureStr = String.valueOf(coachD10Measure);
             Toast.makeText(MainActivity.this, "CoachD2 : " + coachD2Measure+"\nCoachD10 : "+coachD10Measure, Toast.LENGTH_SHORT).show();
