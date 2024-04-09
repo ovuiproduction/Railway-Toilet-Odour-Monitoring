@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Odour Indication</string>
+    <string name="odour_indication">Odour Indication</string>
+    <string name="start_service">Start Service</string>
+    <string name="coach_d2_initial_concentration">....</string>
+    <string name="coach_d2">Coach-D2</string>
+    <string name="coach_d10">Coach-D10</string>
+    <string name="coachD10InitialConcentration">....</string>
+    <string name="stop_service">Stop Service</string>
+</resources>

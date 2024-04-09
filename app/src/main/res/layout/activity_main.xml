@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/odour_indication"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:background="@color/design_default_color_primary"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingVertical="20dp"
+        />
+
+    <Button
+        android:id="@+id/startServiceButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:paddingHorizontal="40dp"
+        android:text="@string/start_service"
+        app:iconTint="#0FE418"
+        app:rippleColor="#0BE313" />
+
+    <Button
+        android:id="@+id/stopServiceButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:paddingHorizontal="40dp"
+        android:text="@string/stop_service"
+        app:iconTint="#E40808"
+        app:rippleColor="#E10C0C" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginTop="60dp"
+        >
+        <TextView
+            android:id="@+id/coachD2Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/coach_d2"
+            android:textAlignment="center"
+            android:layout_gravity="center_horizontal"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            />
+
+        <TextView
+            android:id="@+id/coachD2Concentration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/coach_d2_initial_concentration"
+            android:textAlignment="center"
+            android:layout_gravity="center_horizontal"
+            android:textSize="23sp"
+            android:textColor="@color/white"
+            android:layout_marginStart="50dp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginTop="60dp"
+        >
+        <TextView
+            android:id="@+id/coachD10Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/coach_d10"
+            android:textAlignment="center"
+            android:layout_gravity="center_horizontal"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            />
+
+        <TextView
+            android:id="@+id/coachD10Concentration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/coachD10InitialConcentration"
+            android:textAlignment="center"
+            android:layout_gravity="center_horizontal"
+            android:textSize="23sp"
+            android:textColor="@color/white"
+            android:layout_marginStart="50dp"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>
