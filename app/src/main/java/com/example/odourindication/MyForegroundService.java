@@ -46,9 +46,7 @@ public class MyForegroundService extends Service implements onRequestPermissions
     private final Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
-            // Perform your task here, e.g., fetch data from API
             fetchDataAndCheckThreshold();
-            // Schedule the next execution
             mHandler.postDelayed(this, FETCH_INTERVAL);
         }
     };
@@ -138,7 +136,8 @@ public class MyForegroundService extends Service implements onRequestPermissions
                 .build();
     }
 
-    private void fetchCoachD2Data() {
+
+    private void fetchCoachD2Data(DataFetchCallback callback) {
         String uri = "https://api.thingspeak.com/channels/2457707/fields/1.json?api_key=GI6IWZHS4JO8XBXE&results=1";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, uri, response -> {
             try {
@@ -150,16 +149,18 @@ public class MyForegroundService extends Service implements onRequestPermissions
                 if(!field1.equals("null")){
                     CD2 = Integer.parseInt(field1);
                 }
-                fetchCoachD10Data();
+                callback.onDataFetched(CD2,CD10);
+                //fetchCoachD10Data();
             } catch (JSONException e) {
                 e.printStackTrace();
+                callback.onError();
             }
         }, error -> CD2=-1);
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(stringRequest);
     }
 
-    private void fetchCoachD10Data() {
+    private void fetchCoachD10Data(DataFetchCallback callback) {
         String uri = "https://api.thingspeak.com/channels/2458030/fields/1.json?api_key=48UN6MGBTN4Y69RC&results=1";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, uri, response -> {
             try {
@@ -171,19 +172,56 @@ public class MyForegroundService extends Service implements onRequestPermissions
                 if(!field1.equals("null")){
                     CD10 = Integer.parseInt(field1);
                 }
+                callback.onDataFetched(CD2,CD10);
             } catch (JSONException e) {
                 e.printStackTrace();
+                callback.onError();
             }
         }, error -> CD10=-1);
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(stringRequest);
     }
 
+    interface DataFetchCallback {
+        void onDataFetched(int CD2, int CD10);
+        void onError();
+    }
 
-    @SuppressLint("NotificationPermission")
     private void fetchDataAndCheckThreshold() {
         Log.d(TAG, "Fetching data from API and checking threshold...");
-        fetchCoachD2Data();
+
+        fetchCoachD2Data(new DataFetchCallback() {
+            @Override
+            public void onDataFetched(int CD2, int CD10) {
+                coachD2 = CD2;
+                coachD10 = CD10;
+                checkThresholdAndNotify();
+            }
+
+            @Override
+            public void onError() {
+                Log.e(TAG, "Error fetching data from Coach D2 API");
+            }
+        });
+
+        fetchCoachD10Data(new DataFetchCallback() {
+            @Override
+            public void onDataFetched(int CD2, int CD10) {
+                coachD2 = CD2;
+                coachD10 = CD10;
+                checkThresholdAndNotify();
+            }
+
+            @Override
+            public void onError() {
+                Log.e(TAG, "Error fetching data from Coach D10 API");
+            }
+        });
+    }
+
+    @SuppressLint("NotificationPermission")
+    private void checkThresholdAndNotify() {
+        Log.d(TAG, "Fetching data from API and checking threshold...");
             if (CD2 != -1 && CD10 != -1) {
                 // Data fetched successfully, use it here
                 coachD2 = CD2;
