@@ -138,7 +138,7 @@ public class MyForegroundService extends Service implements onRequestPermissions
 
 
     private void fetchCoachD2Data(DataFetchCallback callback) {
-        String uri = "https://api.thingspeak.com/channels/2457707/fields/1.json?api_key=<Your_READ_API_KEY>&results=1";
+        String uri = "https://api.thingspeak.com/channels/<Your_CHANNEL_ID>/fields/1.json?api_key=<Your_READ_API_KEY>&results=1";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, uri, response -> {
             try {
                 JSONObject jsonObject = new JSONObject(response);
@@ -161,7 +161,7 @@ public class MyForegroundService extends Service implements onRequestPermissions
     }
 
     private void fetchCoachD10Data(DataFetchCallback callback) {
-        String uri = "https://api.thingspeak.com/channels/2458030/fields/1.json?api_key=<Your_READ_API_KEY>&results=1";
+        String uri = "https://api.thingspeak.com/channels/<Your_CHANNEL_ID>/fields/1.json?api_key=<Your_READ_API_KEY>&results=1";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, uri, response -> {
             try {
                 JSONObject jsonObject = new JSONObject(response);
